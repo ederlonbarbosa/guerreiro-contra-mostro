@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guerreiro X Monstro</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app" class="container">
+        <div class="row">
+            <h1 class="header center orange-text">Guerreiro X Monstro</h1>
+            <div class="col s6 m6">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <div align="center">
+                            <img class="activator" src="./img/guerreiro.gif" style="width: 70.3%;">
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4 center">Guerreiro</span>
+                        <div class="center">{{warriorLife}}%</div>
+                        <div class="progress">
+                            <div class="determinate" :class="{red: warriorLife < 25}"
+                                :style="{width: warriorLife + '%'}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col s6 m6">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <div align="center">
+                            <img class="activator" src="./img/monstro.gif" style="width: 80%;">
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4 center">Monstro</span>
+                        <div class="center">{{monsterLife}}%</div>
+                        <div class="progress">
+                            <div class="determinate" :class="{red: monsterLife < 25}"
+                                :style="{width: monsterLife + '%'}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="hasResult">
+            <div class="card-panel teal white-text center" v-if="monsterLife == 0">
+                <h5>Você Ganhou!</h5>
+            </div>
+
+            <div class="card-panel red white-text center" v-else>
+                <h5>Você Perdeu!</h5>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content center">
+                <div class="row">
+                    <template v-if="showActions">
+                        <div class="col s12 m3"><button class="btn red" @click="normalAttack">Atacar</button></div>
+                        <div class="col s12 m3"><button class="btn yellow black-text"
+                                :class="{disabled: monsterLife <= warriorLife || numberSpecial < 1}"
+                                @click="specialAttack">Ataque Especial ({{numberSpecial}})</button>
+                        </div>
+                        <div class="col s12 m3"><button class="btn"
+                                :class="{disabled: monsterLife <= warriorLife || numberHeal < 1}" @click="heal">Curar
+                                ({{numberHeal}})</button>
+                        </div>
+                        <div class="col s12 m3"><button class="btn grey"
+                                @click="start(), showActions = false">Desistir</button>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="col s12 m12">
+                            <button class="btn blue" @click="start">Começar Batalha</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <ul class="collection with-header" v-if="attackLog.length > 0">
+            <li class="collection-header">
+                <h4>Ataques</h4>
+            </li>
+            <li class="collection-item" v-for="attack in attackLog" :class="attack.cls">{{attack.text}}</li>
+        </ul>
+    </div>
+</body>
+<script src="app.js"></script>
+
+</html>
